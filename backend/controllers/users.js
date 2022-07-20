@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
 const NotFoundError = require('../errors/not-found-error');
-const ForbiddenError = require('../errors/forbidden-error');
 const BadRequestError = require('../errors/bad-request-error');
 const {
   MONGO_DUPLICATE_ERROR,
@@ -112,17 +111,17 @@ module.exports.login = (req, res, next) => {
         throw new Unauthorized('Не передан email или password');
       }
       return generateToken({ _id: user._id });
-      // return generateToken({ email: user.email });
     })
     .then((token) => {
       res.send({ token });
     })
-    .catch((err) => {
-      if (err.statusCode === 403) {
-        next(new ForbiddenError('Необходимо авторизоваться'));
-      }
-      next(err);
-    });
+    // .catch((err) => {
+    //   if (err.statusCode === 403) {
+    //     next(new ForbiddenError('Необходимо авторизоваться'));
+    //   }
+    //   next(err);
+    // });
+    .catch(next);
 };
 
 module.exports.updateUser = (req, res, next) => {
